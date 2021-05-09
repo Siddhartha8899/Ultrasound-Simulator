@@ -13,6 +13,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ServerClass serverClass;
     TextView connectionStatus;
     VideoView videoView;
+    Button button;
 
 
     private static final String APP_NAME = "Ultrasound Simulator";
@@ -45,13 +48,52 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
         connectionStatus = findViewById(R.id.connectionStatus);
         videoView = findViewById(R.id.videoView);
+        button = findViewById(R.id.upload);
         hashMap = new HashMap<Integer, Integer>();
         serverSocketStart();
 
-        hashMap.put(0,R.raw.aefastlunginteriasliding);
         hashMap.put(1,R.raw.eefastnormalpelvistransverse);
         hashMap.put(2,R.raw.normalpelvislongitudinal);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openUploadActivity();
+            }
+        });
     }
+    //Start an intent to the upload Activity
+    public void openUploadActivity() {
+        Intent intent = new Intent(this,UploadActivity.class);
+        startActivityForResult(intent,1);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1)
+        {
+            Bundle extras = data.getExtras();
+            if (extras != null)
+            {
+                //Loading Video from Gallery
+                if (extras.containsKey("videoUri"))
+                {
+                    String uriString = data.getStringExtra("videoUri");
+                    Uri uri = Uri.parse(uriString);
+                    videoView.setVideoURI(uri);
+                }
+                else
+                {
+                    //Loading Video from Raw Resources
+                    int resId = extras.getInt("resId");
+                    videoView.setVideoPath("android.resource://" + getPackageName() + "/" + resId);
+                }
+                videoView.start();
+            }
+        }
+    }
+
 
     private void serverSocketStart() {
 

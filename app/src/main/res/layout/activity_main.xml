@@ -1,43 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+   >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/connectionStatus"
-        android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:background="#800000"
-        android:fontFamily="@font/actor"
-        android:text="Not Connected"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="416dp"
-        android:background="#403D3D"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectionStatus">
-
+        <TextView
+            android:id="@+id/connectionStatus"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:background="#800000"
+            android:fontFamily="@font/actor"
+            android:text="Not Connected"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
         <VideoView
             android:id="@+id/videoView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="547dp"
+            />
 
-    </FrameLayout>
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/white"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <Button
+                android:id="@+id/probe"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:text="PROBE" />
+
+            <Button
+                android:id="@+id/patient"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:text="PATIENT"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:layout_below="@+id/probe"
+                />
+
+            <Button
+                android:id="@+id/review"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:text="REVIEW"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:layout_below="@+id/patient"
+                />
+
+            <Button
+                android:id="@+id/report"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:text="REPORT"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:layout_below="@+id/review"
+                />
+
+            <Button
+                android:id="@+id/istation"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:text="ISTATION"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:layout_below="@+id/report"
+                />
+            <Button
+                android:id="@+id/b"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:text="B"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:layout_alignParentRight="true"
+                />
+            <Button
+                android:id="@+id/color"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:text="COLOR"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/b"
+                />
+            <Button
+                android:id="@+id/pw"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:text="PW"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/color"
+                />
+
+            <Button
+                android:id="@+id/m"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:text="M"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/pw"
+                />
+            <Button
+                android:id="@+id/smartivc"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:padding="20dp"
+                android:text="SMART IVC"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/button_border"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/m"
+                />
+
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/white"
+                android:layout_below="@+id/istation"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/line"
+                android:gravity="center_horizontal"
+                >
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:padding="20dp"
+                    android:text="END"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:background="@drawable/new_button_design"
+                    />
+
+                <Button
+                    android:id="@+id/update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:padding="20dp"
+                    android:text="UPDATE"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:background="@drawable/new_button_design"
+                    />
+                <Button
+                    android:id="@+id/saveImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:padding="20dp"
+                    android:text="SAVE IMAGE"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:background="@drawable/new_button_design"
+                    />
+                <Button
+                    android:id="@+id/upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:padding="20dp"
+                    android:text="UPLOAD"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:background="@drawable/new_button_design"
+                    />
+
+            </LinearLayout>
+        </RelativeLayout>
+</LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>
