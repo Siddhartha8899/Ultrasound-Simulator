@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.io.IOException;
@@ -27,18 +28,19 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Bluetooth Functionality
     BluetoothAdapter bluetoothAdapter;
     SendReceive sendReceive;
     ServerClass serverClass;
     TextView connectionStatus;
-    VideoView videoView;
-    Button button;
-
-
     private static final String APP_NAME = "Ultrasound Simulator";
     private static final UUID MY_UUID=UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
     private static final String TAG = "MainActivity";
+
+    // Video Functionality
     HashMap<Integer,Integer> hashMap;
+    VideoView videoView;
+    Button uploadButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +50,11 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
         connectionStatus = findViewById(R.id.connectionStatus);
         videoView = findViewById(R.id.videoView);
-        button = findViewById(R.id.upload);
+        uploadButton = findViewById(R.id.upload);
         hashMap = new HashMap<Integer, Integer>();
         serverSocketStart();
 
-        hashMap.put(1,R.raw.eefastnormalpelvistransverse);
-        hashMap.put(2,R.raw.normalpelvislongitudinal);
-
-        button.setOnClickListener(new View.OnClickListener() {
+        uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openUploadActivity();
@@ -71,34 +70,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1)
-        {
-            Bundle extras = data.getExtras();
-            if (extras != null)
-            {
-                //Loading Video from Gallery
-                if (extras.containsKey("videoUri"))
-                {
-                    String uriString = data.getStringExtra("videoUri");
-                    Uri uri = Uri.parse(uriString);
-                    videoView.setVideoURI(uri);
-                }
-                else
-                {
-                    //Loading Video from Raw Resources
-                    int resId = extras.getInt("resId");
-                    videoView.setVideoPath("android.resource://" + getPackageName() + "/" + resId);
-                }
-                videoView.start();
-            }
+        if( resultCode == RESULT_CANCELED) {
+            return;
         }
+        Bundle extras = data.getExtras();
+        Integer ID = extras.getInt("ID");
+        runVideo(ID.toString());
     }
 
+    private void runVideo(String tempMsg) {
+        if(MyApplication.getApplication().storage.hashMap.containsKey(Integer.parseInt(tempMsg))) {
+            Uri uri = Uri.parse(MyApplication.getApplication().storage.hashMap.get(Integer.parseInt(tempMsg)).videoUri);
+            videoView.setVideoURI(uri);
+            videoView.start();
+            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                public void onPrepared(MediaPlayer mp) {
+                    mp.setLooping(true);
+                }
+            });
+        } else {
+            Toast.makeText(this, "Video Does not exist", Toast.LENGTH_LONG).show();
+        }
+    }
 
     private void serverSocketStart() {
 
         serverClass=new ServerClass();
         serverClass.start();
+    }
+
+    private void close() {
+        Intent mStartActivity = new Intent(getApplicationContext(), MainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 10, mPendingIntent);
+        System.exit(0);
     }
 
     private class ServerClass extends Thread
@@ -199,43 +206,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-    private void runVideo(String tempMsg) {
-        String path = "android.resource://" + getPackageName() + "/" + hashMap.get(Integer.parseInt(tempMsg));
-        Uri uri = Uri.parse(path);
-        videoView.setVideoURI(uri);
-
-        // Create a new MediaController, which handles Play/Pause/Rewind/Fast Forward/Loop/etc
-        MediaController mediaController = new MediaController(this);
-
-        // Link the video and the MediaController together
-        videoView.setMediaController(mediaController);
-        mediaController.setAnchorView(videoView);
-
-
-        // Start loading the aefastlunginteriasliding video in the background
-        videoView.start();
-
-        // Set up a callback. This callback will run when the aefastlunginteriasliding video has finished loading from the hard drive into RAM
-        // It's like opening a video file on your PC. The window shows, but it has a loading icon until the video has fully opened.
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-            // When the aefastlunginteriasliding video has been loaded, this function will run
-            public void onPrepared(MediaPlayer mp) {
-
-                // Tell the MediaPlayer that we want this video to loop
-                mp.setLooping(true);
-            }
-        });
-    }
-
-    private void close() {
-        Intent mStartActivity = new Intent(getApplicationContext(), MainActivity.class);
-        int mPendingIntentId = 123456;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager)getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 10, mPendingIntent);
-        System.exit(0);
-    }
-
 }
