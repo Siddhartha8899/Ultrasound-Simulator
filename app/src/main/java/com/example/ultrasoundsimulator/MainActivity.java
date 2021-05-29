@@ -28,7 +28,7 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Bluetooth Functionality
+    /* Bluetooth Functionality varibale declaration */
     BluetoothAdapter bluetoothAdapter;
     SendReceive sendReceive;
     ServerClass serverClass;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private static final UUID MY_UUID=UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
     private static final String TAG = "MainActivity";
 
-    // Video Functionality
+    /* Video Functionality variable declaration */
     HashMap<Integer,Integer> hashMap;
     VideoView videoView;
     Button uploadButton;
