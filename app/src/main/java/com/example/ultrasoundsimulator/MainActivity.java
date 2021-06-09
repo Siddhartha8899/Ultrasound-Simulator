@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     HashMap<Integer,Integer> hashMap;
     VideoView videoView;
     Button uploadButton;
+    MediaController mediaController;
+    Integer stopPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,10 @@ public class MainActivity extends AppCompatActivity {
         videoView = findViewById(R.id.videoView);
         uploadButton = findViewById(R.id.upload);
         hashMap = new HashMap<Integer, Integer>();
-        serverSocketStart();
+
+        /* Bluetooth Functionality */
+        /* Turns the bluetooth on, if off. */
+        enableBluetooth();
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void enableBluetooth() {
+        if(!bluetoothAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, 2);
+        } else {
+            serverSocketStart();
+        }
+    }
+
     //Start an intent to the upload Activity
     public void openUploadActivity() {
         Intent intent = new Intent(this,UploadActivity.class);
@@ -73,15 +88,24 @@ public class MainActivity extends AppCompatActivity {
         if( resultCode == RESULT_CANCELED) {
             return;
         }
-        Bundle extras = data.getExtras();
-        Integer ID = extras.getInt("ID");
-        runVideo(ID.toString());
+        if(requestCode == 2) {
+            serverSocketStart();
+        } else {
+            Bundle extras = data.getExtras();
+            Integer ID = extras.getInt("ID");
+            runVideo(ID.toString());
+        }
     }
 
     private void runVideo(String tempMsg) {
         if(MyApplication.getApplication().storage.hashMap.containsKey(Integer.parseInt(tempMsg))) {
             Uri uri = Uri.parse(MyApplication.getApplication().storage.hashMap.get(Integer.parseInt(tempMsg)).videoUri);
             videoView.setVideoURI(uri);
+
+            mediaController = new MediaController(this);
+            videoView.setMediaController(mediaController);
+            mediaController.setAnchorView(videoView);
+
             videoView.start();
             videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mp) {
@@ -190,7 +214,26 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-                    } else {
+                    } else if(tempMsg.equals("pause")) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                videoView.pause();
+                                stopPosition = videoView.getCurrentPosition();
+                            }
+                        });
+                    } else if(tempMsg.equals("resume")) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                videoView.start();
+                                videoView.seekTo(stopPosition);
+                                stopPosition = 0;
+                            }
+                        });
+
+                    }
+                    else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
